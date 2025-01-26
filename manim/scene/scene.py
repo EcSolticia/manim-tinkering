@@ -476,7 +476,7 @@ class Scene:
                     if mobject_or_mesh not in self.meshes:
                         new_meshes.append(mobject_or_mesh)
                 else:
-                    # only consider meshes not already in self.mobjects
+                    # only consider mobjects not already in self.mobjects
                     if mobject_or_mesh not in self.mobjects:
                         new_mobjects.append(mobject_or_mesh)
             #self.remove(*new_mobjects)
