@@ -108,6 +108,9 @@ class Scene:
         random_seed: int | None = None,
         skip_animations: bool = False,
     ) -> None:
+
+        print("Running forked ManimCE")
+
         self.camera_class = camera_class
         self.always_update_mobjects = always_update_mobjects
         self.random_seed = random_seed
@@ -469,12 +472,16 @@ class Scene:
             new_meshes = []
             for mobject_or_mesh in mobjects:
                 if isinstance(mobject_or_mesh, Object3D):
-                    new_meshes.append(mobject_or_mesh)
+                    # only consider meshes not already in self.meshes
+                    if mobject_or_mesh not in self.meshes:
+                        new_meshes.append(mobject_or_mesh)
                 else:
-                    new_mobjects.append(mobject_or_mesh)
-            self.remove(*new_mobjects)
+                    # only consider meshes not already in self.mobjects
+                    if mobject_or_mesh not in self.mobjects:
+                        new_mobjects.append(mobject_or_mesh)
+            #self.remove(*new_mobjects)
             self.mobjects += new_mobjects
-            self.remove(*new_meshes)
+            #self.remove(*new_meshes)
             self.meshes += new_meshes
         elif config.renderer == RendererType.CAIRO:
             mobjects = [*mobjects, *self.foreground_mobjects]
@@ -512,8 +519,9 @@ class Scene:
             The mobjects to remove.
         """
         if config.renderer == RendererType.OPENGL:
+            #@note Q: why is the former variable a list and the latter a set?
             mobjects_to_remove = []
-            meshes_to_remove = set()
+            meshes_to_remove = set() #@note check `set()`
             for mobject_or_mesh in mobjects:
                 if isinstance(mobject_or_mesh, Object3D):
                     meshes_to_remove.add(mobject_or_mesh)
